@@ -4,4 +4,4 @@
 changelog_file="CHANGELOG.md"
 
 # Fetch commit comments and append them to the changelog file
-git log --format="- %s" >>"$changelog_file"
+git log --format="- %s (by %an at %ad)" >>"$changelog_file"

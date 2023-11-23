@@ -1,0 +1,7 @@
+- Merge branch 'main' of https://github.com/hoxtibals/PythonProject
+- This is a test for the testing.txt
+- Updated changelog Script
+- This is a test commit
+- Create update_changelog.sh
+- This is the first commit
+- Initial commit
