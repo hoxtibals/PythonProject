@@ -11,15 +11,15 @@ class View(tk.Frame):
         '''
         # create widgets
         # label
-        self.label = ttk.Label(self, text='Email:')
+        self.label = tk.Label(self, text='Email: ')
         self.label.grid(row=1, column=0)
 
         # save button
-        self.save_button = ttk.Button(self, text='Save', command=self.save_button_clicked)
-        self.save_button.grid(row=1, column=3, padx=10)
+        self.WAVbutton = tk.Button(self, text='Open WAV file', command=self.openWAVfile)
+        self.WAVbutton.grid(row=1, column=3, padx=10)
 
         # message
-        self.message_label = ttk.Label(self, text='', foreground='red')
+        self.message_label = tk.Label(self, text='', foreground='red')
         self.message_label.grid(row=2, column=1, sticky=tk.W)
 
         # set the controller
@@ -27,6 +27,17 @@ class View(tk.Frame):
     def pickFile(path_file):
         path_file.set(tk.filedialog.askopenfilename())
         return path_file
+    
+    '''
+    given a file path, open the WAV file and read the metadata 
+    '''
+    def openWAVfile(self):
+        path_file = tk.StringVar()
+        self.pickFile(path_file)
+        # now path_file should be the path to the correct file now we will need to open it and call
+        # the methods in the model module to read the metadata
+        
+        
     
     def StartWindow():
         mainWindow = tk.Tk()
@@ -46,3 +57,13 @@ class View(tk.Frame):
         plot.plot([1,2,3,4,5,6,7,8,9,10], [2,4,6,8,10,12,14,16,18,20])
         
         mainWindow.mainloop()
+        
+    def show_error(self, message):
+        """
+        Show an error message
+        :param message:
+        :return:
+        """
+        self.message_label['text'] = message
+        self.message_label['foreground'] = 'red'
+        self.message_label.after(3000, self.hide_message)
