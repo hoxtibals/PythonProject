@@ -3,6 +3,7 @@
 import tkinter as tk
 import matplotlib.pyplot as matplt
 
+
 class View(tk.Frame):
     def __init__(self, parent):
         '''
@@ -24,6 +25,18 @@ class View(tk.Frame):
 
         # set the controller
         self.controller = None
+
+    def set_controller(self, controller):
+        """
+        Set the controller
+        :param controller:
+        :return:
+        """
+        self.controller = controller
+    '''
+    Input: an emptry string which we set to the path of the file we select in the dialog
+    Output: the chosen path directory in string format
+    '''
     def pickFile(path_file):
         path_file.set(tk.filedialog.askopenfilename())
         return path_file
@@ -36,6 +49,8 @@ class View(tk.Frame):
         self.pickFile(path_file)
         # now path_file should be the path to the correct file now we will need to open it and call
         # the methods in the model module to read the metadata
+        # we will need to use the controller module to call the methods in the model module
+        
         
         
     
