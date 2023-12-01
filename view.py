@@ -41,15 +41,6 @@ class View(tk.Frame):
         path_file.set(tk.filedialog.askopenfilename())
         return path_file
     
-    '''
-    given a file path, open the WAV file and read the metadata 
-    '''
-    def openWAVfile(self):
-        path_file = tk.StringVar()
-        self.pickFile(path_file)
-        # now path_file should be the path to the correct file now we will need to open it and call
-        # the methods in the model module to read the metadata
-        # we will need to use the controller module to call the methods in the model module
         
         
     def StartWindow():
