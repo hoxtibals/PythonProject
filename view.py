@@ -52,13 +52,11 @@ class View(tk.Frame):
         # we will need to use the controller module to call the methods in the model module
         
         
-        
-    
     def StartWindow():
         mainWindow = tk.Tk()
         mainWindow.title("WAV file reader")
         
-        #we need to use a figrure to display the graph inside Tkinter 
+        #we need to use a figrure to display the graph inside the FRAME 
         graph = matplt.figure(figsize = (5,5), dpi = 100)
         plot = graph.add_subplot(1,1,1)
         

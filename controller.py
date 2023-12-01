@@ -3,6 +3,19 @@
 #This is the file we will run to start the application 
 # This will be where we will input the WAV file 
 # View -> Controller -> Model
-from view import StartWindow
+
+#Where we will call the show error view method
+from view import View
+from model import Model
+
+class Controller:
+    def __init__(self,model,view):
+        self.view = model
+        self.model = view
+
+        # use methods as different calls to the model and view
+
+        
+
 
 
