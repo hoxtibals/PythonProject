@@ -15,7 +15,10 @@ class Controller:
 
         # use methods as different calls to the model and view
 
-        
+    def setFrequency(self):
+        # call the method in the model to get the frequency 
+        # call the method in the view to display the frequency
+        pass
 
 
 
