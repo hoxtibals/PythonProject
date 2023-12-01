@@ -61,7 +61,6 @@ class View(tk.Frame):
         plot.plot([1,2,3,4,5,6,7,8,9,10], [2,4,6,8,10,12,14,16,18,20])
         
         mainWindow.mainloop()
-        
     def show_error(self, message):
         """
         Show an error message
@@ -71,3 +70,8 @@ class View(tk.Frame):
         self.message_label['text'] = message
         self.message_label['foreground'] = 'red'
         self.message_label.after(3000, self.hide_message)
+
+
+def pickFile(path_file):
+    path_file.set(tk.filedialog.askopenfilename())
+    return path_file
