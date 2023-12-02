@@ -14,6 +14,8 @@ class Model:
         try:
             if filepath[-4:] != ".wav":
                 raise ValueError("File is not a WAV file")
+            else:
+                print("File is a WAV file, name is: " + filepath)
         except ValueError:
             print("File is not a WAV file")
 
