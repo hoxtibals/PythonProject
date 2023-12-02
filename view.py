@@ -33,11 +33,12 @@ class View(tk.Frame):
         :return:
         """
         self.controller = controller
-    '''
+    
+    ''' 
     Input: an emptry string which we set to the path of the file we select in the dialog
     Output: the chosen path directory in string format
     '''
-    def pickFile(path_file):
+    def pickFile(self, path_file):
         path_file.set(tk.filedialog.askopenfilename())
         return path_file
     
