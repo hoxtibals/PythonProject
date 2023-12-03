@@ -2,6 +2,7 @@
 #It represents the model’s data to user
 import tkinter as tk
 import matplotlib.pyplot as matplt
+from controller import Controller
 
 
 class View(tk.Frame):
@@ -16,7 +17,7 @@ class View(tk.Frame):
         self.label.grid(row=1, column=0)
 
         # save button
-        self.WAVbutton = tk.Button(self, text='Open WAV file', command=self.openWAVfile)
+        self.WAVbutton = tk.Button(self, text='Open WAV file', command=self.controller.loadWAVfile)
         self.WAVbutton.grid(row=1, column=3, padx=10)
 
         # message
@@ -71,6 +72,17 @@ class View(tk.Frame):
         self.message_label['text'] = message
         self.message_label['foreground'] = 'red'
         self.message_label.after(3000, self.hide_message)
+
+    def show_success(self, message):
+        """
+        Show a message
+        :param message:
+        :return:
+        """
+        self.message_label['text'] = message
+        self.message_label['foreground'] = 'green'
+        self.message_label.after(3000, self.hide_message)
+        
 
 
 def pickFile(path_file):

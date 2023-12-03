@@ -5,19 +5,45 @@
 #Create a WAV file class that can be used to manipulate the WAV file and read metadata  
 # the controller module will be used to call these methods in model module 
 
+import scipy
+
 class Model:
-    def __init__(self,filepath):
+    def __init__(self):
         #first we need to verify the WAV file is a WAV file
         #we can do this by checking the file extension
+        self.sample_rate = 0
+        self.data = 0
 
-        # give error if not a WAV file will need to be changed (11/30)
+    @property
+    def sample_rate(self):
+        return self.sample_rate
+    @property
+    def data(self):
+        return self.data
+    @sample_rate.setter
+    def sample_rate(self,value):
+        self.sample_rate = value
+    @data.setter    
+    def data(self,value):
+        self.data = value
+
+    def openWAVfile(self,filepath):
+        #open the WAV file and read the metadata
+        #return the metadata
         try:
             if filepath[-4:] != ".wav":
                 raise ValueError("File is not a WAV file")
             else:
                 print("File is a WAV file, name is: " + filepath)
+            # now we load the WAV file
+            self.sample_rate, self.data = scipy.io.wavfile.read(filepath)
         except ValueError:
             print("File is not a WAV file")
+
+    def packageWAVfile(self):
+        #package the WAV file into a WAV file object to be displayed
+        pass
+        
 
     # have methods on what we will do to the WAV file and call in the controller module
 

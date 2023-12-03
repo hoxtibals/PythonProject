@@ -19,6 +19,9 @@ class Controller:
         # call the method in the model to get the frequency 
         # call the method in the view to display the frequency
         pass
-
-
+    def LoadWAVfile(self,filepath):
+        # call the method in the model to load the WAV file
+        # call the method in the view to display the WAV file
+        self.model.someMethod()
+        self.view.someMethod()
 
