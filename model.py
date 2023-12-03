@@ -13,6 +13,8 @@ class Model:
         #we can do this by checking the file extension
         self.sample_rate = 0
         self.data = 0
+        self.num_channels = 0
+        self.length = 0
 
     @property
     def sample_rate(self):
@@ -25,7 +27,10 @@ class Model:
         self.sample_rate = value
     @data.setter    
     def data(self,value):
+        # we can get number of channels by looking at the data
         self.data = value
+        self.num_channels = self.data.shape[len(self.data.shape)-1]
+        self.length = self.data.shape[0]/self.sample_rate
 
     def openWAVfile(self,filepath):
         #open the WAV file and read the metadata
