@@ -22,11 +22,15 @@ class Controller:
     def LoadWAVfile(self,filepath):
         # call the method in the model to load the WAV file
         # call the method in the view to display the WAV file
-        self.model.openWAVfile(filepath)
+        try:
+            self.model.openWAVfile(filepath)
+        except ValueError as error:
+            self.view.show_error(error)
+        #after this function the basic summar statistics are created, now we just hand them off to the view
         self.view.someMethod()
 
     '''POSSIBLE FUNCTIONS
     - Create a method to parse the info from the WAV file to TKinter to be shown
-    
+
     '''
 

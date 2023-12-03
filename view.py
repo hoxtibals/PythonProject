@@ -17,7 +17,7 @@ class View(tk.Frame):
         self.label.grid(row=1, column=0)
 
         # save button
-        self.WAVbutton = tk.Button(self, text='Open WAV file', command=self.controller.loadWAVfile)
+        self.WAVbutton = tk.Button(self, text='Open WAV file', command=self.loadWAVfileButton)
         self.WAVbutton.grid(row=1, column=3, padx=10)
 
         # message
@@ -43,8 +43,17 @@ class View(tk.Frame):
         path_file.set(tk.filedialog.askopenfilename())
         return path_file
     
+    def loadWAVfileButton(self):
+        '''
+        handle button click
+        :return:
+        '''
+        if self.controller:
+            path_file = tk.filedialog.askopenfilename()
+            self.controller.loadWAVfile(path_file)
         
-        
+            
+            
     def StartWindow():
         mainWindow = tk.Tk()
         mainWindow.title("WAV file reader")
