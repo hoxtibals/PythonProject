@@ -10,15 +10,15 @@ from model import Model
 
 class Controller:
     def __init__(self,model,view):
-        self.view = model
-        self.model = view
+        self.view = view
+        self.model = model
 
         # use methods as different calls to the model and view
 
-    def setFrequency(self):
+    def setFrequency(self,freq):
         # call the method in the model to get the frequency 
         # call the method in the view to display the frequency
-        pass
+        self.model.target_freq(freq)
     def LoadWAVfile(self,filepath):
         # call the method in the model to load the WAV file
         # call the method in the view to display the WAV file

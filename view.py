@@ -90,6 +90,18 @@ class View(tk.Frame):
         self.message_label['text'] = message
         self.message_label['foreground'] = 'green'
         self.message_label.after(3000, self.hide_message)
+        
+    def set_freq_button(self, freq):
+        '''
+        Set the frequency
+        :param freq:
+        :return:
+        '''
+        #This will be called when button is pushed, will call controller to use command
+        self.controller.setFrequency(freq)
+    def loadGraph(self):
+        #loads the graph into the frame 
+        pass
     
 
 
