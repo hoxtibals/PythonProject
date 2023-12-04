@@ -16,7 +16,9 @@ def start_program():
     mainW.title("WAV File Analyzer")
     
     WAVframe = tk.Frame(mainW)
+    WAVframe.pack()
     Wav_view = View(WAVframe)
+    Wav_view.pack() 
     Wav_model = Model()
     #create the controller and assign it to view and model
     Wav_controller = Controller(Wav_model,Wav_view)

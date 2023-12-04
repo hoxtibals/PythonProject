@@ -12,10 +12,7 @@ class View(tk.Frame):
         we can use the this class to call the methods in the final module
         '''
         # create widgets
-        # label
-        self.label = tk.Label(self, text='Email: ')
-        self.label.pack()
-
+        
         # save button
         self.WAVbutton = tk.Button(self, text='Open WAV file', command=self.loadWAVfileButton)
         self.WAVbutton.pack()

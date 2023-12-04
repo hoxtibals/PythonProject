@@ -37,9 +37,9 @@ class Model:
     @data.setter    
     def data(self,value):
         # we can get number of channels by looking at the data
-        self.data = value
-        self.num_channels = self.data.shape[len(self.data.shape)-1]
-        self.length = self.data.shape[0]/self.sample_rate
+        self._data = value
+        self._num_channels = self.data.shape[len(self.data.shape)-1]
+        self._length = self.data.shape[0]/self.sample_rate
 
     @property
     def spectrum(self):
