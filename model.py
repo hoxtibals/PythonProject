@@ -8,7 +8,7 @@
 import scipy
 import numpy as np
 import matplotlib.pyplot as matplt
-import pydub
+#import pydub
 
 
 class Model:
@@ -16,23 +16,23 @@ class Model:
         '''
         attributes of the WAV file we will be using to manipulate the WAV file
         '''
-        self.sample_rate = 0
-        self.data = 0
-        self.num_channels = 0
-        self.length = 0
-        self.spectrum = np.empty((0,0))
-        self.freqs = np.array([])
-        self.t = np.array([])
+        self._sample_rate = 0
+        self._data = 0
+        self._num_channels = 0
+        self._length = 0
+        self._spectrum = np.empty((0,0))
+        self._freqs = np.array([])
+        self._t = np.array([])
 
     @property
     def sample_rate(self):
-        return self.sample_rate
+        return self._sample_rate
     @property
     def data(self):
-        return self.data
+        return self._data
     @sample_rate.setter
     def sample_rate(self,value):
-        self.sample_rate = value
+        self._sample_rate = value
     #This is without the use of Pydub, if this isnt working we can change it
     @data.setter    
     def data(self,value):
@@ -69,7 +69,7 @@ class Model:
             else:
                 print("File is a WAV file, name is: " + filepath)
             # now we load the WAV file
-            self.sample_rate, self.data = scipy.io.wavfile.read(filepath)
+            self._sample_rate, self._data = scipy.io.wavfile.read(filepath)
             self.spectrum, self.freqs, self.t, im = matplt.specgram(self.data, Fs=self.sample_rate, NFFT=1024, cmap=matplt.get_cmap("jet"))
         except ValueError:
             print("File is not a WAV file")

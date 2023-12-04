@@ -6,6 +6,7 @@ import matplotlib.pyplot as matplt
 
 class View(tk.Frame):
     def __init__(self, parent):
+        super().__init__(parent)
         '''
         TAKEN FROM CLASS 11-29 PARTTICIPATION
         we can use the this class to call the methods in the final module
@@ -13,15 +14,11 @@ class View(tk.Frame):
         # create widgets
         # label
         self.label = tk.Label(self, text='Email: ')
-        self.label.grid(row=1, column=0)
+        self.label.pack()
 
         # save button
         self.WAVbutton = tk.Button(self, text='Open WAV file', command=self.loadWAVfileButton)
-        self.WAVbutton.grid(row=1, column=3, padx=10)
-
-        # message
-        self.message_label = tk.Label(self, text='', foreground='red')
-        self.message_label.grid(row=2, column=1, sticky=tk.W)
+        self.WAVbutton.pack()
         
         #statistics window
         self.stats_label = tk.Label(self, text='Summary Stats: ', foreground='black')

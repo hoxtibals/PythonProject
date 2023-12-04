@@ -14,13 +14,15 @@ from controller import Controller
 def start_program():
     mainW = tk.Tk()
     mainW.title("WAV File Analyzer")
-    mainW.mainloop()
-    WAVframe = tk.frame()
+    
+    WAVframe = tk.Frame(mainW)
     Wav_view = View(WAVframe)
     Wav_model = Model()
     #create the controller and assign it to view and model
     Wav_controller = Controller(Wav_model,Wav_view)
     Wav_view.set_controller(Wav_controller)
+    
+    mainW.mainloop()
 
 if __name__ == '__main__':
     start_program()
