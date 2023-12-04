@@ -4,9 +4,12 @@
 # This will be where we will input the WAV file 
 # View -> Controller -> Model
 
+
+
 #Where we will call the show error view method
 from view import View
 from model import Model
+import tkinter as tk
 
 class Controller:
     def __init__(self,model,view):
