@@ -22,6 +22,10 @@ class View(tk.Frame):
         # message
         self.message_label = tk.Label(self, text='', foreground='red')
         self.message_label.grid(row=2, column=1, sticky=tk.W)
+        
+        #statistics window
+        self.stats_label = tk.Label(self, text='Summary Stats: ', foreground='black')
+        self.stats_label.pack()
 
         # set the controller
         self.controller = None
@@ -57,18 +61,6 @@ class View(tk.Frame):
         mainWindow = tk.Tk()
         mainWindow.title("WAV file reader")
         
-        #we need to use a figrure to display the graph inside the FRAME 
-        graph = matplt.figure(figsize = (5,5), dpi = 100)
-        plot = graph.add_subplot(1,1,1)
-        
-        #button to load WAV file we will need to import the command from another module
-        #we will use a string to keep track of file path, we will need to use
-        #LAMDA function to ensure the command is not called when the window is created
-        path_file = tk.StringVar()
-        load = tk.Button(mainWindow, text = "Load WAV file", command = lambda:pickFile(path_file))
-        load.pack()
-        #example input used to test plot
-        plot.plot([1,2,3,4,5,6,7,8,9,10], [2,4,6,8,10,12,14,16,18,20])
         
         mainWindow.mainloop()
     def show_error(self, message):
