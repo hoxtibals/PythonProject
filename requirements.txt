@@ -2,3 +2,5 @@ fastapi
 tkinter
 matplotlib
 scipy
+pydub
+numpy

@@ -24,6 +24,11 @@ class Controller:
         # call the method in the view to display the WAV file
         try:
             self.model.openWAVfile(filepath)
+            self.view.show_success("WAV file loaded successfully")
+            #now we need to parse the info from opening the WAV file to the view
+            #we can access our basic statistics from the model with the 
+            #attributes for the model class
+            self.view.showStats(self.model.sample_rate, self.model.num_channels, self.model.length)
         except ValueError as error:
             self.view.show_error(error)
         #after this function the basic summar statistics are created, now we just hand them off to the view

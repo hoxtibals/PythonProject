@@ -8,6 +8,7 @@
 import scipy
 import numpy as np
 import matplotlib.pyplot as matplt
+import pydub
 
 
 class Model:
@@ -32,6 +33,7 @@ class Model:
     @sample_rate.setter
     def sample_rate(self,value):
         self.sample_rate = value
+    #This is without the use of Pydub, if this isnt working we can change it
     @data.setter    
     def data(self,value):
         # we can get number of channels by looking at the data
@@ -75,6 +77,7 @@ class Model:
         '''
         returns a mid range frequency
         '''
+    
     '''
     input: a frequency in hz to be selected
     output: a target frequency around the 1000 hz range
@@ -112,13 +115,20 @@ class Model:
         
         #this will get the rest of the array from Max to the end
         spliced_array = decible_data[max_index:]
+        #now we can calculate tr20 and explogate it to rt60
+        value_5db = self.nearestValue(spliced_array,value_max-5)
+        index_5db = np.where(spliced_array == value_5db)
+        value_25db = self.nearestValue(spliced_array,value_max-25)
+        index_25db = np.where(spliced_array == value_25db)
+        #now we have our rt20 which we can use to find rt60
+        rt20 = self.t[index_5db] - self.t[index_25db]
+        rt60 = rt20 * 3
+        return rt60
         
-        
-        #use this NESTED function to call to find different nearest values
-        def nearestValue(array,value):
-            nparray = np.asarray(array)
-            idx = (np.abs(nparray-value)).argmin()
-            return nparray[idx]
+    def nearestValue(array,value):
+        nparray = np.asarray(array)
+        idx = (np.abs(nparray-value)).argmin()
+        return nparray[idx]
         
 
     def packageWAVfile(self):
