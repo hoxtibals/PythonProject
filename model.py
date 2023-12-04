@@ -22,7 +22,6 @@ class Model:
         self.spectrum = np.empty((0,0))
         self.freqs = np.array([])
         self.t = np.array([])
-        self.im = None
 
     @property
     def sample_rate(self):
@@ -75,15 +74,36 @@ class Model:
                 print("File is a WAV file, name is: " + filepath)
             # now we load the WAV file
             self.sample_rate, self.data = scipy.io.wavfile.read(filepath)
-            self.spectrum, self.freqs, self.t, self.im = matplt.specgram(self.data, Fs=self.sample_rate, NFFT=1024, cmap=matplt.get_cmap("jet"))
+            self.spectrum, self.freqs, self.t, im = matplt.specgram(self.data, Fs=self.sample_rate, NFFT=1024, cmap=matplt.get_cmap("jet"))
         except ValueError:
             print("File is not a WAV file")
 
-        def target_freq(self):
-            for x in self.freqs:
-                if x > 1000:
-                    break
-            return x
+        '''
+        returns a mid range frequency
+        '''
+
+    def target_freq(self):
+        for x in self.freqs:
+            if x > 1000:
+                break
+        return x
+    
+    '''
+    return the data of the frequency in decible which we 
+    can pass directly to the plot directory
+    '''
+    def frequency_check(self):
+       #debugger(f'frequencies {self.freqs[:10]}')
+        target_freq = self.target_freq()
+        #debugger(f'target frequency {target_freq}')
+        index_freq = np.where(self.freqs == target_freq)[0][0]
+        #debugger(f'index of target frequency {index_freq}')
+
+        freq_data = self.spectrum[index_freq]
+        #debugger(f'spectrum data {freq_data}')
+
+        decible_data = 10 * np.log10(freq_data)
+        return decible_data
 
     def packageWAVfile(self):
         #package the WAV file into a WAV file object to be displayed
@@ -91,4 +111,5 @@ class Model:
         
 
     # have methods on what we will do to the WAV file and call in the controller module
-
+def debugger(message):
+    print(message)

@@ -1,4 +1,4 @@
-#View represents the HTML files, which interact with the end user. 
+
 #It represents the model’s data to user
 import tkinter as tk
 import matplotlib.pyplot as matplt
@@ -93,8 +93,6 @@ class View(tk.Frame):
     
 
 
-def debugger(message):
-    print(message)
 
 def pickFile(path_file):
     path_file.set(tk.filedialog.askopenfilename())
