@@ -57,12 +57,6 @@ class Model:
     @t.setter
     def t(self, value):
         self._t = value
-    @property
-    def im(self):
-        return self._im
-    @im.setter
-    def im(self, value):
-        self._im = value
 
     def openWAVfile(self,filepath):
         #open the WAV file and read the metadata
@@ -81,10 +75,13 @@ class Model:
         '''
         returns a mid range frequency
         '''
-
-    def target_freq(self):
+    '''
+    input: a frequency in hz to be selected
+    output: a target frequency around the 1000 hz range
+    '''
+    def target_freq(self,target):
         for x in self.freqs:
-            if x > 1000:
+            if x > target:
                 break
         return x
     
@@ -92,9 +89,10 @@ class Model:
     return the data of the frequency in decible which we 
     can pass directly to the plot directory
     '''
-    def frequency_check(self):
+    def frequency_check(self,chosen_freq):
        #debugger(f'frequencies {self.freqs[:10]}')
-        target_freq = self.target_freq()
+       #1000 hz is the target frequency for mid range
+        target_freq = self.target_freq(chosen_freq)
         #debugger(f'target frequency {target_freq}')
         index_freq = np.where(self.freqs == target_freq)[0][0]
         #debugger(f'index of target frequency {index_freq}')
