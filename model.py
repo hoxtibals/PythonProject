@@ -102,6 +102,24 @@ class Model:
 
         decible_data = 10 * np.log10(freq_data)
         return decible_data
+    
+    def calculat_reverb(self, chosen_freq):
+        decible_data = self.frequency_check(chosen_freq)
+        max_index = np.argmax(decible_data)
+        value_max = decible_data[max_index]
+        #debugger(f'max value {value_max}')
+        #debugger(f'max index {max_index}')
+        
+        #this will get the rest of the array from Max to the end
+        spliced_array = decible_data[max_index:]
+        
+        
+        #use this NESTED function to call to find different nearest values
+        def nearestValue(array,value):
+            nparray = np.asarray(array)
+            idx = (np.abs(nparray-value)).argmin()
+            return nparray[idx]
+        
 
     def packageWAVfile(self):
         #package the WAV file into a WAV file object to be displayed
