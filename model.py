@@ -6,15 +6,23 @@
 # the controller module will be used to call these methods in model module 
 
 import scipy
+import numpy as np
+import matplotlib.pyplot as matplt
+
 
 class Model:
     def __init__(self):
-        #first we need to verify the WAV file is a WAV file
-        #we can do this by checking the file extension
+        '''
+        attributes of the WAV file we will be using to manipulate the WAV file
+        '''
         self.sample_rate = 0
         self.data = 0
         self.num_channels = 0
         self.length = 0
+        self.spectrum = np.empty((0,0))
+        self.freqs = np.array([])
+        self.t = np.array([])
+        self.im = None
 
     @property
     def sample_rate(self):
@@ -32,6 +40,31 @@ class Model:
         self.num_channels = self.data.shape[len(self.data.shape)-1]
         self.length = self.data.shape[0]/self.sample_rate
 
+    @property
+    def spectrum(self):
+        return self._spectrum
+    @spectrum.setter
+    def spectrum(self, value):
+        self._spectrum = value
+    @property
+    def freqs(self):
+        return self._freqs
+    @freqs.setter
+    def freqs(self, value):
+        self._freqs = value
+    @property
+    def t(self):
+        return self._t
+    @t.setter
+    def t(self, value):
+        self._t = value
+    @property
+    def im(self):
+        return self._im
+    @im.setter
+    def im(self, value):
+        self._im = value
+
     def openWAVfile(self,filepath):
         #open the WAV file and read the metadata
         #return the metadata
@@ -42,8 +75,15 @@ class Model:
                 print("File is a WAV file, name is: " + filepath)
             # now we load the WAV file
             self.sample_rate, self.data = scipy.io.wavfile.read(filepath)
+            self.spectrum, self.freqs, self.t, self.im = matplt.specgram(self.data, Fs=self.sample_rate, NFFT=1024, cmap=matplt.get_cmap("jet"))
         except ValueError:
             print("File is not a WAV file")
+
+        def target_freq(self):
+            for x in self.freqs:
+                if x > 1000:
+                    break
+            return x
 
     def packageWAVfile(self):
         #package the WAV file into a WAV file object to be displayed

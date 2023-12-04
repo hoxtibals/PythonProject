@@ -2,7 +2,6 @@
 #It represents the model’s data to user
 import tkinter as tk
 import matplotlib.pyplot as matplt
-from controller import Controller
 
 
 class View(tk.Frame):
@@ -91,8 +90,11 @@ class View(tk.Frame):
         self.message_label['text'] = message
         self.message_label['foreground'] = 'green'
         self.message_label.after(3000, self.hide_message)
-        
+    
 
+
+def debugger(message):
+    print(message)
 
 def pickFile(path_file):
     path_file.set(tk.filedialog.askopenfilename())
