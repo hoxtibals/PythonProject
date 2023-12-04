@@ -85,6 +85,21 @@ class View(tk.Frame):
         '''
         #This will be called when button is pushed, will call controller to use command
         self.controller.setFrequency(freq)
+    def create_stats(self):
+        #we use controller methods to get the statistics from the model
+        self.statisticsFrame = tk.Frame(self)
+        self.statisticsFrame.pack()
+
+        stats = self.controller.passStats()
+        self.sampleRateLabel = tk.Label(self.statisticsFrame, text=f'Sample Rate: {stats["sample_rate"]}')
+        self.sampleRateLabel.pack()
+        self.numChannelsLabel = tk.Label(self.statisticsFrame, text=f'Number of Channels: {stats["num_channels"]}')
+        self.numChannelsLabel.pack()
+        self.lengthLabel = tk.Label(self.statisticsFrame, text=f'Length: {stats["length"]}')
+        self.lengthLabel.pack()
+
+
+        self.sampleRateLabel = tk.Label(self.statisticsFrame, text=f'Sample Rate: {self.model}')
     def loadGraph(self):
         #loads the graph into the frame 
         pass

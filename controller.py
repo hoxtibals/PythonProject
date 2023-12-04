@@ -14,6 +14,17 @@ class Controller:
         self.model = model
 
         # use methods as different calls to the model and view
+# may need to include more stats or calculate them on the fly 
+    def passStats(self):
+        return {
+            'sample_rate': self.model.sample_rate,
+            'data': self.model.data,
+            'num_channels': self.model.num_channels,
+            'length': self.model.length,
+            'spectrum': self.model.spectrum,
+            'freqs': self.model.freqs,
+            't': self.model.t,
+        }
 
     def setFrequency(self,freq):
         # call the method in the model to get the frequency 

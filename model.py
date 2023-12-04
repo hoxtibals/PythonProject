@@ -8,7 +8,7 @@
 import scipy
 import numpy as np
 import matplotlib.pyplot as matplt
-#import pydub
+from pydub import AudioSegment
 
 
 class Model:
@@ -68,11 +68,17 @@ class Model:
                 raise ValueError("File is not a WAV file")
             else:
                 print("File is a WAV file, name is: " + filepath)
-            # now we load the WAV file
-            self._sample_rate, self._data = scipy.io.wavfile.read(filepath)
-            self.spectrum, self.freqs, self.t, im = matplt.specgram(self.data, Fs=self.sample_rate, NFFT=1024, cmap=matplt.get_cmap("jet"))
         except ValueError:
             print("File is not a WAV file")
+        # now we load the WAV file but first we gotta handle multiple channels
+        audio = AudioSegment.from_wav(filepath)
+        mono_audio = audio.set_channels(1)
+        
+        # Convert mono_audio to numpy array
+        self._data = np.array(mono_audio.get_array_of_samples())
+        self._sample_rate = mono_audio.frame_rate
+
+        self.spectrum, self.freqs, self.t, im = matplt.specgram(self.data, Fs=self.sample_rate, NFFT=1024, cmap=matplt.get_cmap("jet"))
 
         '''
         returns a mid range frequency
@@ -106,7 +112,7 @@ class Model:
         decible_data = 10 * np.log10(freq_data)
         return decible_data
     
-    def calculat_reverb(self, chosen_freq):
+    def calculate_reverb(self, chosen_freq):
         decible_data = self.frequency_check(chosen_freq)
         max_index = np.argmax(decible_data)
         value_max = decible_data[max_index]
