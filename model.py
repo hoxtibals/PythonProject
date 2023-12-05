@@ -75,7 +75,8 @@ class Model:
             print("File is not a WAV file")"""
         # now we load the WAV file but first we gotta handle multiple channels
         try:
-            audio = AudioSegment.from_wav(filepath)
+            new_path = self.convert_to_wav(filepath)
+            audio = AudioSegment.from_wav(new_path)
             mono_audio = audio.set_channels(1)
             # Convert mono_audio to numpy array
             self._data = np.array(mono_audio.get_array_of_samples())
@@ -84,9 +85,51 @@ class Model:
             self.spectrum, self.freqs, self.t, im = matplt.specgram(self.data, Fs=self.sample_rate, NFFT=1024, cmap=matplt.get_cmap("jet"))
         except FileNotFoundError:
             raise FileNotFoundError("File is not a WAV file")
+        except ValueError:
+            raise ValueError("File is NOT a Audio file")
         
-    
+    def convert_to_wav(filepath):
+        # List of known audio file extensions
+        audio_extensions = ['wav', 'mp3', 'ogg', 'flv', 'aac', 'wma', 'aiff', 'flac', 'alac', 'm4a']
 
+        # Get the file extension
+        file_extension = filepath.split('.')[-1].lower()
+
+        # If the file is not an audio file, raise an exception
+        if file_extension not in audio_extensions:
+            raise ValueError(f"File '{filepath}' is not a recognized audio file.")
+
+        # If the file is not a WAV file, convert it to WAV format
+        if file_extension != 'wav':
+            # Open the file with pydub, depending on the file type
+            if file_extension == 'mp3':
+                audio = AudioSegment.from_mp3(filepath)
+            elif file_extension == 'ogg':
+                audio = AudioSegment.from_ogg(filepath)
+            elif file_extension == 'flv':
+                audio = AudioSegment.from_flv(filepath)
+            elif file_extension == 'aac':
+                audio = AudioSegment.from_file(filepath, format='aac')
+            elif file_extension == 'wma':
+                audio = AudioSegment.from_file(filepath, format='wma')
+            elif file_extension == 'aiff':
+                audio = AudioSegment.from_file(filepath, format='aiff')
+            elif file_extension == 'flac':
+                audio = AudioSegment.from_file(filepath, format='flac')
+            elif file_extension == 'alac':
+                audio = AudioSegment.from_file(filepath, format='alac')
+            elif file_extension == 'm4a':
+                audio = AudioSegment.from_file(filepath, format='m4a')
+            # Add more file types if needed...
+
+            # Export the audio in WAV format
+            wav_filepath = filepath.rsplit('.', 1)[0] + '.wav'
+            audio.export(wav_filepath, format='wav')
+
+            return wav_filepath
+
+        # If the file is already a WAV file, just return the original file path
+        return filepath
         '''
         returns a mid range frequency
         '''
