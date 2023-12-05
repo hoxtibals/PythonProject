@@ -53,7 +53,6 @@ class Controller:
         except FileNotFoundError as error:
             self.view.show_error(error)
         #after this function the basic summar statistics are created, now we just hand them off to the view
-        self.view.someMethod()
 
     '''POSSIBLE FUNCTIONS
     - Create a method to parse the info from the WAV file to TKinter to be shown

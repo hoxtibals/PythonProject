@@ -8,6 +8,7 @@
 import scipy
 import numpy as np
 import matplotlib.pyplot as matplt
+import ffmpeg
 from pydub import AudioSegment
 
 
@@ -63,25 +64,28 @@ class Model:
     def openWAVfile(self,filepath):
         #open the WAV file and read the metadata
         #return the metadata
-        try:
+
+        #Old chunk of code however the next try block is more efficient
+        """try:
             if filepath[-4:] != ".wav":
                 raise ValueError("File is not a WAV file")
             else:
                 print("File is a WAV file, name is: " + filepath)
         except ValueError:
-            print("File is not a WAV file")
+            print("File is not a WAV file")"""
         # now we load the WAV file but first we gotta handle multiple channels
         try:
             audio = AudioSegment.from_wav(filepath)
             mono_audio = audio.set_channels(1)
-        except FileNotFoundError:
-            raise FileNotFoundError("File not found/Is not a WAV file")
-        
-        # Convert mono_audio to numpy array
-        self._data = np.array(mono_audio.get_array_of_samples())
-        self._sample_rate = mono_audio.frame_rate
+            # Convert mono_audio to numpy array
+            self._data = np.array(mono_audio.get_array_of_samples())
+            self._sample_rate = mono_audio.frame_rate
 
-        self.spectrum, self.freqs, self.t, im = matplt.specgram(self.data, Fs=self.sample_rate, NFFT=1024, cmap=matplt.get_cmap("jet"))
+            self.spectrum, self.freqs, self.t, im = matplt.specgram(self.data, Fs=self.sample_rate, NFFT=1024, cmap=matplt.get_cmap("jet"))
+        except FileNotFoundError:
+            raise FileNotFoundError("File is not a WAV file")
+        
+    
 
         '''
         returns a mid range frequency

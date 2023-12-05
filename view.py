@@ -38,11 +38,9 @@ class View(tk.Frame):
         """
         self.controller = controller
     
-    ''' 
-    Input: an emptry string which we set to the path of the file we select in the dialog
-    Output: the chosen path directory in string format
     '''
-    
+    handles the button clicked event for the loadWav file
+    '''
     def loadWAVfileButton(self):
         '''
         handle button click
@@ -53,13 +51,6 @@ class View(tk.Frame):
             self.controller.loadWAVfile(path_file)
         
             
-            
-    def StartWindow():
-        mainWindow = tk.Tk()
-        mainWindow.title("WAV file reader")
-        
-        
-        mainWindow.mainloop()
         
     def set_freq_button(self, freq):
         '''
@@ -111,9 +102,3 @@ class View(tk.Frame):
         self.message_label['foreground'] = 'green'
         self.message_label.after(3000, self.hide_message)
     
-
-
-
-def pickFile(path_file):
-    path_file.set(tk.filedialog.askopenfilename())
-    return path_file
