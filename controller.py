@@ -25,6 +25,14 @@ class Controller:
             'freqs': self.model.freqs,
             't': self.model.t,
         }
+    
+    def StatsButtonClicked(self):
+        try:
+            if not self.model.data:
+                raise ValueError("No WAV file loaded")
+            self.view.create_stats()
+        except ValueError as error:
+            self.view.show_error(error)   
 
     def setFrequency(self,freq):
         # call the method in the model to get the frequency 

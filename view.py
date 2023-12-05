@@ -19,7 +19,10 @@ class View(tk.Frame):
         
         #statistics window
         self.stats_label = tk.Label(self, text='Summary Stats: ', foreground='black')
+        self.stats_button = tk.Button(self, text='Show Stats', command=self.showStatsButton)
         self.stats_label.pack()
+        
+        
 
         # set the controller
         self.controller = None
@@ -97,9 +100,9 @@ class View(tk.Frame):
         self.numChannelsLabel.pack()
         self.lengthLabel = tk.Label(self.statisticsFrame, text=f'Length: {stats["length"]}')
         self.lengthLabel.pack()
-
-
-        self.sampleRateLabel = tk.Label(self.statisticsFrame, text=f'Sample Rate: {self.model}')
+            
+    def showStatsButton(self):
+        self.controller.StatsButtonClicked()
     def loadGraph(self):
         #loads the graph into the frame 
         pass
