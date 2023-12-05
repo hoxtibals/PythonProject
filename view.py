@@ -110,6 +110,9 @@ class View(tk.Frame):
         #loads the graph into the frame 
         pass
     
+    def hide_message(self):
+        self.message_label['text'] = ''
+    
 
 
 
