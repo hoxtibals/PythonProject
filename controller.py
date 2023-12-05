@@ -38,7 +38,7 @@ class Controller:
         # call the method in the model to get the frequency 
         # call the method in the view to display the frequency
         self.model.target_freq(freq)
-    def LoadWAVfile(self,filepath):
+    def loadWAVfile(self,filepath):
         # call the method in the model to load the WAV file
         # call the method in the view to display the WAV file
         try:
@@ -49,6 +49,8 @@ class Controller:
             #attributes for the model class
             self.view.showStats(self.model.sample_rate, self.model.num_channels, self.model.length)
         except ValueError as error:
+            self.view.show_error(error)
+        except FileNotFoundError as error:
             self.view.show_error(error)
         #after this function the basic summar statistics are created, now we just hand them off to the view
         self.view.someMethod()

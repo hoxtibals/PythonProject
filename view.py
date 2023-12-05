@@ -1,6 +1,7 @@
 
 #It represents the model’s data to user
 import tkinter as tk
+from tkinter import filedialog
 import matplotlib.pyplot as matplt
 
 
@@ -12,6 +13,8 @@ class View(tk.Frame):
         we can use the this class to call the methods in the final module
         '''
         # create widgets
+        self.message_label = tk.Label(self, text='', foreground='black')
+        self.message_label.pack()
         
         # save button
         self.WAVbutton = tk.Button(self, text='Open WAV file', command=self.loadWAVfileButton)
@@ -49,7 +52,7 @@ class View(tk.Frame):
         :return:
         '''
         if self.controller:
-            path_file = tk.filedialog.askopenfilename()
+            path_file = filedialog.askopenfilename()
             self.controller.loadWAVfile(path_file)
         
             

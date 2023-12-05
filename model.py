@@ -71,8 +71,11 @@ class Model:
         except ValueError:
             print("File is not a WAV file")
         # now we load the WAV file but first we gotta handle multiple channels
-        audio = AudioSegment.from_wav(filepath)
-        mono_audio = audio.set_channels(1)
+        try:
+            audio = AudioSegment.from_wav(filepath)
+            mono_audio = audio.set_channels(1)
+        except FileNotFoundError:
+            raise FileNotFoundError("File not found/Is not a WAV file")
         
         # Convert mono_audio to numpy array
         self._data = np.array(mono_audio.get_array_of_samples())
