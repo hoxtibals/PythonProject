@@ -88,7 +88,7 @@ class Model:
         except ValueError:
             raise ValueError("File is NOT a Audio file")
         
-    def convert_to_wav(filepath):
+    def convert_to_wav(self,filepath):
         # List of known audio file extensions
         audio_extensions = ['wav', 'mp3', 'ogg', 'flv', 'aac', 'wma', 'aiff', 'flac', 'alac', 'm4a']
 
