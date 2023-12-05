@@ -42,9 +42,6 @@ class View(tk.Frame):
     Input: an emptry string which we set to the path of the file we select in the dialog
     Output: the chosen path directory in string format
     '''
-    def pickFile(self, path_file):
-        path_file.set(tk.filedialog.askopenfilename())
-        return path_file
     
     def loadWAVfileButton(self):
         '''
@@ -63,25 +60,6 @@ class View(tk.Frame):
         
         
         mainWindow.mainloop()
-    def show_error(self, message):
-        """
-        Show an error message
-        :param message:
-        :return:
-        """
-        self.message_label['text'] = message
-        self.message_label['foreground'] = 'red'
-        self.message_label.after(3000, self.hide_message)
-
-    def show_success(self, message):
-        """
-        Show a message
-        :param message:
-        :return:
-        """
-        self.message_label['text'] = message
-        self.message_label['foreground'] = 'green'
-        self.message_label.after(3000, self.hide_message)
         
     def set_freq_button(self, freq):
         '''
@@ -112,6 +90,26 @@ class View(tk.Frame):
     
     def hide_message(self):
         self.message_label['text'] = ''
+        
+    def show_error(self, message):
+        """
+        Show an error message
+        :param message:
+        :return:
+        """
+        self.message_label['text'] = message
+        self.message_label['foreground'] = 'red'
+        self.message_label.after(3000, self.hide_message)
+
+    def show_success(self, message):
+        """
+        Show a message
+        :param message:
+        :return:
+        """
+        self.message_label['text'] = message
+        self.message_label['foreground'] = 'green'
+        self.message_label.after(3000, self.hide_message)
     
 
 
