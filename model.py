@@ -90,9 +90,11 @@ class Model:
         except ValueError:
             raise ValueError("File is NOT a Audio file")
         
-    def strip_metadata(input_file, output_file):
+    def strip_metadata(self,input_file, output_file):
         command = ['ffmpeg', '-i', input_file, '-map_metadata', '-1', '-c:v', 'copy', '-c:a', 'copy', output_file]
-        subprocess.run(command, check=True) 
+        subprocess.run(command, check=True)
+        
+        
     def convert_to_wav(self,filepath):
         # List of known audio file extensions
         
@@ -131,14 +133,21 @@ class Model:
             # Export the audio in WAV format
             wav_filepath = filepath.rsplit('.', 1)[0] + '.wav'
             audio.export(wav_filepath, format='wav')
+# Strip metadata from the new WAV file
+            stripped_wav_filepath = os.path.splitext(filepath)[0] + '_stripped.wav'
+            self.strip_metadata(wav_filepath, stripped_wav_filepath)
 
-            return wav_filepath
+        # Return the path to the new file
+            return stripped_wav_filepath
 
-        # If the file is already a WAV file, just return the original file path
-        return filepath
-        '''
-        returns a mid range frequency
-        '''
+    # If the file is already a WAV file, strip metadata and return the path
+        else:
+            stripped_wav_filepath = os.path.splitext(filepath)[0] + '_stripped.wav'
+            self.strip_metadata(filepath, stripped_wav_filepath)
+            return stripped_wav_filepath
+            '''
+            returns a mid range frequency
+            '''
     
     '''
     input: a frequency in hz to be selected
