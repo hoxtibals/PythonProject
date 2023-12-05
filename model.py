@@ -10,6 +10,8 @@ import numpy as np
 import matplotlib.pyplot as matplt
 import ffmpeg
 from pydub import AudioSegment
+import os
+import subprocess
 
 
 class Model:
@@ -88,8 +90,12 @@ class Model:
         except ValueError:
             raise ValueError("File is NOT a Audio file")
         
+    def strip_metadata(input_file, output_file):
+        command = ['ffmpeg', '-i', input_file, '-map_metadata', '-1', '-c:v', 'copy', '-c:a', 'copy', output_file]
+        subprocess.run(command, check=True) 
     def convert_to_wav(self,filepath):
         # List of known audio file extensions
+        
         audio_extensions = ['wav', 'mp3', 'ogg', 'flv', 'aac', 'wma', 'aiff', 'flac', 'alac', 'm4a']
 
         # Get the file extension

@@ -5,3 +5,5 @@ scipy
 pydub
 numpy
 ffmpeg
+os
+subprocess
