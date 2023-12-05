@@ -47,7 +47,7 @@ class Controller:
             #now we need to parse the info from opening the WAV file to the view
             #we can access our basic statistics from the model with the 
             #attributes for the model class
-            self.view.showStats(self.model.sample_rate, self.model.num_channels, self.model.length)
+            self.view.create_stats()
         except ValueError as error:
             self.view.show_error(error)
         except FileNotFoundError as error:

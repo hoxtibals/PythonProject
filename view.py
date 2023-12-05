@@ -90,7 +90,7 @@ class View(tk.Frame):
         """
         self.message_label['text'] = message
         self.message_label['foreground'] = 'red'
-        self.message_label.after(3000, self.hide_message)
+        #self.message_label.after(3000, self.hide_message)
 
     def show_success(self, message):
         """
@@ -100,5 +100,5 @@ class View(tk.Frame):
         """
         self.message_label['text'] = message
         self.message_label['foreground'] = 'green'
-        self.message_label.after(3000, self.hide_message)
+        #self.message_label.after(3000, self.hide_message)
     

@@ -28,11 +28,27 @@ class Model:
         self._t = np.array([])
 
     @property
+    def length(self):
+        return self._length
+    @property
+    def num_channels(self):
+        return self._num_channels
+    @property
     def sample_rate(self):
         return self._sample_rate
     @property
     def data(self):
         return self._data
+    @property
+    def spectrum(self):
+        return self._spectrum
+    @property
+    def freqs(self):
+        return self._freqs
+    @property
+    def t(self):
+        return self._t
+    
     @sample_rate.setter
     def sample_rate(self,value):
         self._sample_rate = value
@@ -43,25 +59,22 @@ class Model:
         self._data = value
         self._num_channels = self.data.shape[len(self.data.shape)-1]
         self._length = self.data.shape[0]/self.sample_rate
-
-    @property
-    def spectrum(self):
-        return self._spectrum
     @spectrum.setter
     def spectrum(self, value):
         self._spectrum = value
-    @property
-    def freqs(self):
-        return self._freqs
     @freqs.setter
     def freqs(self, value):
         self._freqs = value
-    @property
-    def t(self):
-        return self._t
     @t.setter
     def t(self, value):
         self._t = value
+    @num_channels.setter
+    def num_channels(self,value):
+        self._num_channels = value
+    @length.setter
+    def length(self,value):
+        self._length = value    
+    
 
     def openWAVfile(self,filepath):
         #open the WAV file and read the metadata
