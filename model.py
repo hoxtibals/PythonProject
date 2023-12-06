@@ -12,6 +12,7 @@ import ffmpeg
 from pydub import AudioSegment
 import os
 import subprocess
+import io
 
 
 class Model:
@@ -111,44 +112,39 @@ class Model:
     def convert_to_wav(self,filepath):
         # List of known audio file extensions
         
-        audio_extensions = ['wav', 'mp3', 'ogg', 'flv', 'aac', 'wma', 'aiff', 'flac', 'alac', 'm4a']
+        audioFormats = {
+        'wav': None,
+        'mp3': AudioSegment.from_mp3,
+        'ogg': AudioSegment.from_ogg,
+        'flv': AudioSegment.from_flv,
+        'aac': lambda fp: AudioSegment.from_file(fp, format='aac'),
+        'wma': lambda fp: AudioSegment.from_file(fp, format='wma'),
+        'aiff': lambda fp: AudioSegment.from_file(fp, format='aiff'),
+        'flac': lambda fp: AudioSegment.from_file(fp, format='flac'),
+        'alac': lambda fp: AudioSegment.from_file(fp, format='alac'),
+        'm4a': lambda fp: AudioSegment.from_file(fp, format='m4a'),
+    }
+
 
         # Get the file extension
         file_extension = filepath.split('.')[-1].lower()
 
         # If the file is not an audio file, raise an exception
-        if file_extension not in audio_extensions:
+        if file_extension not in audioFormats:
             raise ValueError(f"File '{filepath}' is not a recognized audio file.")
 
         # If the file is not a WAV file, convert it to WAV format
         if file_extension != 'wav':
-            # Open the file with pydub, depending on the file type
-            if file_extension == 'mp3':
-                audio = AudioSegment.from_mp3(filepath)
-            elif file_extension == 'ogg':
-                audio = AudioSegment.from_ogg(filepath)
-            elif file_extension == 'flv':
-                audio = AudioSegment.from_flv(filepath)
-            elif file_extension == 'aac':
-                audio = AudioSegment.from_file(filepath, format='aac')
-            elif file_extension == 'wma':
-                audio = AudioSegment.from_file(filepath, format='wma')
-            elif file_extension == 'aiff':
-                audio = AudioSegment.from_file(filepath, format='aiff')
-            elif file_extension == 'flac':
-                audio = AudioSegment.from_file(filepath, format='flac')
-            elif file_extension == 'alac':
-                audio = AudioSegment.from_file(filepath, format='alac')
-            elif file_extension == 'm4a':
-                audio = AudioSegment.from_file(filepath, format='m4a')
-            # Add more file types if needed...
+            # Get the appropriate AudioSegment method
+            method = audioFormats[file_extension]
+            # Open the file with the appropriate method
+            audio = method(filepath)
+            # Export the audio in WAV format to a BytesIO object
+            wav_file = io.BytesIO()
+            audio.export(wav_file, format='wav')
+            wav_file.seek(0)  # Go back to the start of the file
 
-            # Export the audio in WAV format
-            wav_filepath = filepath.rsplit('.', 1)[0] + '.wav'
-            audio.export(wav_filepath, format='wav')
-# Strip metadata from the new WAV file
-            stripped_wav_filepath = os.path.splitext(filepath)[0] + '_stripped.wav'
-            self.strip_metadata(wav_filepath, stripped_wav_filepath)
+            return wav_file
 
         # Return the path to the new file
             return stripped_wav_filepath
@@ -186,8 +182,8 @@ class Model:
 
         freq_data = self.spectrum[index_freq]
         #debugger(f'spectrum data {freq_data}')
-
-        decible_data = 10 * np.log10(freq_data)
+        #add a very small constant to avoid 0
+        decible_data = 10 * np.log10(freq_data + 1e-10)
         return decible_data
     
     def calculate_reverb(self, chosen_freq):
@@ -209,7 +205,7 @@ class Model:
         rt60 = rt20 * 3
         return rt60
         
-    def nearestValue(array,value):
+    def nearestValue(self,array,value):
         nparray = np.asarray(array)
         idx = (np.abs(nparray-value)).argmin()
         return nparray[idx]
