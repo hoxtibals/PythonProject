@@ -34,6 +34,13 @@ class Controller:
         except ValueError as error:
             self.view.show_error(error)   
 
+    def graphButtonClicked(self,frame):
+        try:
+            if not self.model.data:
+                raise ValueError("No WAV file loaded")
+            self.view.display_graph(self.model.graph_figure(),frame)
+        except ValueError as error:
+            self.view.show_error(error)
     def setFrequency(self,freq):
         # call the method in the model to get the frequency 
         # call the method in the view to display the frequency

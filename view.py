@@ -3,6 +3,7 @@
 import tkinter as tk
 from tkinter import filedialog
 import matplotlib.pyplot as matplt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
 class View(tk.Frame):
@@ -24,6 +25,8 @@ class View(tk.Frame):
         self.stats_label = tk.Label(self, text='Summary Stats: ', foreground='black')
         self.stats_button = tk.Button(self, text='Show Stats', command=self.showStatsButton)
         self.stats_label.pack()
+        
+        self.loadGraphButton = tk.Button(self, text='Show Graph', command=self.showGraphButton)
         
         
 
@@ -49,6 +52,9 @@ class View(tk.Frame):
         if self.controller:
             path_file = filedialog.askopenfilename()
             self.controller.loadWAVfile(path_file)
+            self.WAVbutton = tk.Button(self, text='Load Spectogram', command= self.showGraphButton)
+            self.WAVbutton.pack()
+        
         
             
         
@@ -68,11 +74,16 @@ class View(tk.Frame):
         stats = self.controller.passStats()
         self.sampleRateLabel = tk.Label(self.statisticsFrame, text=f'Sample Rate: {stats["sample_rate"]}')
         self.sampleRateLabel.pack()
-        self.numChannelsLabel = tk.Label(self.statisticsFrame, text=f'Number of Channels: {stats["num_channels"]}')
+        self.numChannelsLabel = tk.Label(self.statisticsFrame, text=f'Number of Channels (before change): {stats["num_channels"]}')
         self.numChannelsLabel.pack()
         self.lengthLabel = tk.Label(self.statisticsFrame, text=f'Length: {stats["length"]}')
         self.lengthLabel.pack()
             
+    def showGraphButton(self):
+        graphFrame = tk.Frame(self)
+        graphFrame.pack()
+        self.controller.graphButtonClicked(graphFrame)
+        
     def showStatsButton(self):
         self.controller.StatsButtonClicked()
     def loadGraph(self):
@@ -82,6 +93,17 @@ class View(tk.Frame):
     def hide_message(self):
         self.message_label['text'] = ''
         
+    def display_graph(self, figure,frame):
+        """
+        Display the graph
+        :param figure: the figure that will be displayed (this will be called in the controller)
+        :param frame: the frame we wish to assign the graph to
+        :return:
+        """
+        self.graph = FigureCanvasTkAgg(figure, master=frame)
+        self.graph.get_tk_widget().pack()
+        self.graph.draw()
+        pass
     def show_error(self, message):
         """
         Show an error message

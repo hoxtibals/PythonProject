@@ -8,11 +8,13 @@
 import scipy
 import numpy as np
 import matplotlib.pyplot as matplt
-import ffmpeg
+from matplotlib.figure import Figure
 from pydub import AudioSegment
 import os
 import subprocess
 import io
+import wave
+import contextlib
 
 
 class Model:
@@ -93,6 +95,8 @@ class Model:
         try:
             new_path = self.convert_to_wav(filepath)
             audio = AudioSegment.from_wav(new_path)
+            self.length = audio.duration_seconds
+            self.num_channels = audio.channels
             mono_audio = audio.set_channels(1)
             # Convert mono_audio to numpy array
             self._data = np.array(mono_audio.get_array_of_samples())
@@ -124,8 +128,6 @@ class Model:
         'alac': lambda fp: AudioSegment.from_file(fp, format='alac'),
         'm4a': lambda fp: AudioSegment.from_file(fp, format='m4a'),
     }
-
-
         # Get the file extension
         file_extension = filepath.split('.')[-1].lower()
 
@@ -146,18 +148,15 @@ class Model:
 
             return wav_file
 
-        # Return the path to the new file
-            return stripped_wav_filepath
-
-    # If the file is already a WAV file, strip metadata and return the path
+            # Return the path to the new file
+            """else:
+            return filepath"""
+        # If the file is already a WAV file, strip metadata and return the path
         else:
             stripped_wav_filepath = os.path.splitext(filepath)[0] + '_stripped.wav'
             self.strip_metadata(filepath, stripped_wav_filepath)
             return stripped_wav_filepath
-            '''
-            returns a mid range frequency
-            '''
-    
+
     '''
     input: a frequency in hz to be selected
     output: a target frequency around the 1000 hz range
@@ -167,6 +166,24 @@ class Model:
             if x > target:
                 break
         return x
+        """_summary_
+        calculate the duration of the WAV file
+        
+        """
+    """"def get_duration(self,filepath):
+        with contextlib.closing(wave.open(filepath,'r')) as f:
+            frames = f.getnframes()
+            rate = f.getframerate()
+            duration = frames / float(rate)
+            return duration"""
+    def graph_figure(self):
+        #create the figure
+        fig = Figure(figsize=(5,5),dpi=100)
+        #add the plot to the figure
+        plot1 = fig.add_subplot(111)
+        #add the data to the plot
+        plot1.specgram(self._data, Fs=self._sample_rate, NFFT=1024, cmap='jet')
+        return fig
     
     '''
     return the data of the frequency in decible which we 
