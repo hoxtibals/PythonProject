@@ -178,11 +178,13 @@ class Model:
             return duration"""
     def graph_figure(self):
         #create the figure
-        fig = Figure(figsize=(5,5),dpi=100)
+        fig = Figure(figsize=(6,6),dpi=100)
         #add the plot to the figure
         plot1 = fig.add_subplot(111)
         #add the data to the plot
         plot1.specgram(self._data, Fs=self._sample_rate, NFFT=1024, cmap='jet')
+        plot1.set_xlabel('Time')
+        plot1.set_ylabel('Frequency')
         return fig
     
     '''
