@@ -36,7 +36,7 @@ class Controller:
 
     def graphButtonClicked(self,frame):
         try:
-            if not self.model.data:
+            if not self.model.data.any():
                 raise ValueError("No WAV file loaded")
             self.view.display_graph(self.model.graph_figure(),frame)
         except ValueError as error:

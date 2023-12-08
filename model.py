@@ -163,7 +163,7 @@ class Model:
     '''
     def target_freq(self,target):
         for x in self.freqs:
-            if x > target:
+            if (x > target).any():
                 break
         return x
         """_summary_
@@ -213,14 +213,20 @@ class Model:
         #this will get the rest of the array from Max to the end
         spliced_array = decible_data[max_index:]
         #now we can calculate tr20 and explogate it to rt60
-        value_5db = self.nearestValue(spliced_array,value_max-5)
-        index_5db = np.where(spliced_array == value_5db)
-        value_25db = self.nearestValue(spliced_array,value_max-25)
-        index_25db = np.where(spliced_array == value_25db)
-        #now we have our rt20 which we can use to find rt60
-        rt20 = self.t[index_5db] - self.t[index_25db]
-        rt60 = rt20 * 3
-        return rt60
+        try:
+            value_5db = self.nearestValue(spliced_array,value_max-5)
+            index_5db = np.where(spliced_array == value_5db)[0][0]
+            value_25db = self.nearestValue(spliced_array,value_max-25)
+            index_25db = np.where(spliced_array == value_25db)[0][0]
+            #now we have our rt20 which we can use to find rt60
+            rt20 = self.t[index_5db] - self.t[index_25db]
+            rt60 = rt20 * 3
+        except IndexError:
+            rt60 = 0
+            raise IndexError("Frequency is not in the WAV file")
+        finally:
+            return rt60
+    
         
     def nearestValue(self,array,value):
         nparray = np.asarray(array)
