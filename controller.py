@@ -24,6 +24,7 @@ class Controller:
             'spectrum': self.model.spectrum,
             'freqs': self.model.freqs,
             't': self.model.t,
+            'average_rt60': self.model.avgRT
         }
     
     def StatsButtonClicked(self):

@@ -20,12 +20,13 @@ import contextlib
 class Model:
     def __init__(self):
         '''
-        attributes of the WAV file we will be using to manipulate the WAV file
+        attributes of the WAV file we will be using
         '''
         self._sample_rate = 0
         self._data = 0
         self._num_channels = 0
         self._length = 0
+        self._avgRT = 0
         self._spectrum = np.empty((0,0))
         self._freqs = np.array([])
         self._t = np.array([])
@@ -55,11 +56,13 @@ class Model:
     @property
     def t(self):
         return self._t
+    @property
+    def avgRT(self):
+        return self._avgRT
     
     @sample_rate.setter
     def sample_rate(self,value):
         self._sample_rate = value
-    #This is without the use of Pydub, if this isnt working we can change it
     @data.setter    
     def data(self,value):
         # we can get number of channels by looking at the data
@@ -84,20 +87,16 @@ class Model:
     @graphs.setter
     def graphs(self,name,graph):
         self._graphs[name] = graph 
+    @avgRT.setter
+    def avgRT(self,value):
+        self._avgRT = round(abs(value),2)
     
-
+    '''
+    input: a filepath to a file
+    output: update attributes with WAV file object
+    '''
     def openWAVfile(self,filepath):
-        #open the WAV file and read the metadata
-        #return the metadata
-
-        #Old chunk of code however the next try block is more efficient
-        """try:
-            if filepath[-4:] != ".wav":
-                raise ValueError("File is not a WAV file")
-            else:
-                print("File is a WAV file, name is: " + filepath)
-        except ValueError:
-            print("File is not a WAV file")"""
+        #open the WAV file and convert to a WAV file
         # now we load the WAV file but first we gotta handle multiple channels
         try:
             new_path = self.convert_to_wav(filepath)
@@ -108,18 +107,24 @@ class Model:
             # Convert mono_audio to numpy array
             self._data = np.array(mono_audio.get_array_of_samples())
             self._sample_rate = mono_audio.frame_rate
-
             self.spectrum, self.freqs, self.t, im = matplt.specgram(self.data, Fs=self.sample_rate, NFFT=1024, cmap=matplt.get_cmap("jet"))
+            self.avgRT = (self.calculate_reverb(1000) + self.calculate_reverb(250) + self.calculate_reverb(6000))/3
         except FileNotFoundError:
             raise FileNotFoundError("File is not a WAV file")
         except ValueError:
             raise ValueError("File is NOT a Audio file")
         
+    '''
+    just strip the metadata from the file so we can read it correctly
+    '''
     def strip_metadata(self,input_file, output_file):
         command = ['ffmpeg', '-i', input_file, '-map_metadata', '-1', '-c:v', 'copy', '-c:a', 'copy', output_file]
         subprocess.run(command, check=True)
         
-        
+    '''
+    input: a filepath to a file
+    output: a WAV file object which will not have metadata 
+    '''
     def convert_to_wav(self,filepath):
         # List of known audio file extensions
         
@@ -175,7 +180,11 @@ class Model:
         return x
 
 
-
+    '''
+    input:
+    output: a dictionary of all the graphs we will need assigned to the object
+    We just create the graphs here and assign them to the object in a dictionary
+    '''
     def graph_figures(self):
         #create all figures we will need and assign to dictionary and return
 
@@ -186,8 +195,8 @@ class Model:
         plot1 = Spectogram.add_subplot(111)
         #add the data to the plot
         plot1.specgram(self._data, Fs=self._sample_rate, NFFT=1024, cmap='jet')
-        plot1.set_xlabel('Time')
-        plot1.set_ylabel('Frequency')
+        plot1.set_xlabel('Time(s)')
+        plot1.set_ylabel('Frequency(Hz)')
 
         #Create Low freq figure
         rt60Low = round(abs(self.calculate_reverb(250)),2)
@@ -197,8 +206,8 @@ class Model:
         lowFreq.text(0.95, 0.95, f'rt60: {rt60Low}', horizontalalignment='right', verticalalignment='top', transform=lowFreq.transFigure)
         plot2 = lowFreq.add_subplot(111)
         plot2.plot(self.t,self.frequency_check(250), linewidth=0.5)
-        plot2.set_xlabel('Time')
-        plot2.set_ylabel('Decibels')
+        plot2.set_xlabel('Time(s)')
+        plot2.set_ylabel('Decibels(dB)')
 
         #create Mid freq figure
         rt60Mid = round(abs(self.calculate_reverb(1000)),2)
@@ -208,35 +217,61 @@ class Model:
         midFreq.text(0.95, 0.95, f'rt60: {rt60Mid}', horizontalalignment='right', verticalalignment='top', transform=lowFreq.transFigure)
         plot3 = midFreq.add_subplot(111)
         plot3.plot(self.t,self.frequency_check(1000), linewidth=0.5)
-        plot3.set_xlabel('Time')
-        plot3.set_ylabel('Decibels')
+        plot3.set_xlabel('Time(s)')
+        plot3.set_ylabel('Decibels(dB)')
 
         # create High freq figure
-        rt60High = round(abs(self.calculate_reverb(4000)),2)
+        rt60High = round(abs(self.calculate_reverb(6000)),2)
         highFreq = Figure(figsize=(6,6),dpi=100)
         self.graphs['High Frequency'] = highFreq
         highFreq.suptitle('High Frequency Figure')
         highFreq.text(0.95, 0.95, f'rt60: {rt60High}', horizontalalignment='right', verticalalignment='top', transform=lowFreq.transFigure)
         plot4 = highFreq.add_subplot(111)
         plot4.plot(self.t,self.frequency_check(4000), linewidth=0.5)
-        plot4.set_xlabel('Time')
-        plot4.set_ylabel('Decibels')
+        plot4.set_xlabel('Time(s)')
+        plot4.set_ylabel('Decibels(dB)')
 
-        #new plot check
+        #extra plot 1, RAW amplitude from file
         amplitude = Figure(figsize=(6,6),dpi=100)
         self.graphs['Amplitude'] = amplitude
-        amplitude.suptitle('Amplitude Figure')
+        amplitude.suptitle('RAW Amplitude Figure')
         plot5 = amplitude.add_subplot(111)
         time = np.arange(len(self.data))/self.sample_rate
         plot5.plot(time,abs(self.data), linewidth=0.5)
         plot5.set_xlabel('Time')
         plot5.set_ylabel('Amplitude')
+        plot5.set_ylim(0, 10000)
+
+        # Create a new figure for the combined frequency plot
+        combinedFreq = Figure(figsize=(6,6),dpi=100)
+        self.graphs['Combined Frequency'] = combinedFreq
+        combinedFreq.suptitle('Combined Frequency Figure')
+        plot6 = combinedFreq.add_subplot(111)
+        # Plot the low, mid, and high frequency data on the same plot
+        plot6.plot(self.t, self.frequency_check(250), label='Low Frequency', linewidth=0.5)
+        plot6.plot(self.t, self.frequency_check(1000), label='Mid Frequency', linewidth=0.5)
+        plot6.plot(self.t, self.frequency_check(4000), label='High Frequency', linewidth=0.5)
+        plot6.set_xlabel('Time(s)')
+        plot6.set_ylabel('Decibels(dB)')
+        plot6.legend()
+
+        # Create a new figure for the magnitude spectrum
+        magnitudeSpectrum = Figure(figsize=(6,6),dpi=100)
+        self.graphs['Magnitude Spectrum'] = magnitudeSpectrum
+        magnitudeSpectrum.suptitle('Magnitude Spectrum Figure')
+        plot7 = magnitudeSpectrum.add_subplot(111)
+        # Compute and plot the magnitude spectrum
+        Pxx, freqs, line = matplt.magnitude_spectrum(self._data, Fs=self._sample_rate, scale='dB', sides='default')
+        plot7.plot(freqs, Pxx)
+        plot7.set_xlabel('Frequency (Hz)')
+        plot7.set_ylabel('Magnitude (dB)')
         
 
         
     
     '''
-    return the data of the frequency in decible which we 
+    input: a chosen frequency we are checking and turnign into decibles
+    output:return the data of the frequency in decible which we 
     can pass directly to the plot directory
     '''
     def frequency_check(self,chosen_freq):
@@ -252,7 +287,10 @@ class Model:
         #add a very small constant to avoid 0
         decible_data = 10 * np.log10(freq_data + 1e-10)
         return decible_data
-    
+    '''
+    input: a chosen frequency we are checking the reverb time for
+    output: the reverb time for the frequency
+    '''
     def calculate_reverb(self, chosen_freq):
         decible_data = self.frequency_check(chosen_freq)
         max_index = np.argmax(decible_data)
@@ -283,10 +321,6 @@ class Model:
         idx = (np.abs(nparray-value)).argmin()
         return nparray[idx]
         
-
-    def packageWAVfile(self):
-        #package the WAV file into a WAV file object to be displayed
-        pass
         
 
     # have methods on what we will do to the WAV file and call in the controller module

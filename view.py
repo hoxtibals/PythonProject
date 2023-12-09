@@ -94,6 +94,10 @@ class View(tk.Frame):
         self.numChannelsLabel.pack()
         self.lengthLabel = tk.Label(self.statisticsFrame, text=f'Length: {stats["length"]}')
         self.lengthLabel.pack()
+        self.average_rt60Label = tk.Label(self.statisticsFrame, text=f'Average RT60: {stats["average_rt60"]}')
+        self.average_rt60Label.pack()
+        self.averageDifferentceLabel = tk.Label(self.statisticsFrame, text=f'Difference rt60 from 0.5: {stats["average_rt60"] - 0.5}')
+        self.averageDifferentceLabel.pack()
             
     def showGraphButton(self):
         graphFrame = tk.Frame(self)
