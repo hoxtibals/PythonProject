@@ -84,6 +84,7 @@ class View(tk.Frame):
         graphFrame.pack()
         self.controller.graphButtonClicked(graphFrame)
         
+        
     def showStatsButton(self):
         self.controller.StatsButtonClicked()
     def loadGraph(self):

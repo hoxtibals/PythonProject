@@ -166,16 +166,9 @@ class Model:
             if (x > target).any():
                 break
         return x
-        """_summary_
-        calculate the duration of the WAV file
-        
-        """
-    """"def get_duration(self,filepath):
-        with contextlib.closing(wave.open(filepath,'r')) as f:
-            frames = f.getnframes()
-            rate = f.getframerate()
-            duration = frames / float(rate)
-            return duration"""
+
+
+
     def graph_figure(self):
         #create the figure
         fig = Figure(figsize=(6,6),dpi=100)
