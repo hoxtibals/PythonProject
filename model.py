@@ -194,16 +194,18 @@ class Model:
         #add the plot to the figure
         plot1 = Spectogram.add_subplot(111)
         #add the data to the plot
-        plot1.specgram(self._data, Fs=self._sample_rate, NFFT=1024, cmap='jet')
+        _,_,_,im = plot1.specgram(self._data, Fs=self._sample_rate, NFFT=1024, cmap='jet')
         plot1.set_xlabel('Time(s)')
         plot1.set_ylabel('Frequency(Hz)')
+        Spectogram.colorbar(im,ax=plot1).set_label('Intensity(dB)')
+        #Spectogram.colorbar(im).set_label('Intensity(dB)')
 
         #Create Low freq figure
         rt60Low = round(abs(self.calculate_reverb(250)),2)
         lowFreq = Figure(figsize=(6,6),dpi=100)
         self.graphs['Low Frequency'] = lowFreq
         lowFreq.suptitle('Low Frequency Figure')
-        lowFreq.text(0.95, 0.95, f'rt60: {rt60Low}', horizontalalignment='right', verticalalignment='top', transform=lowFreq.transFigure)
+        lowFreq.text(0.95, 0.95, f'rt60: {rt60Low}seconds', horizontalalignment='right', verticalalignment='top', transform=lowFreq.transFigure)
         plot2 = lowFreq.add_subplot(111)
         plot2.plot(self.t,self.frequency_check(250), linewidth=0.5)
         plot2.set_xlabel('Time(s)')
@@ -214,7 +216,7 @@ class Model:
         midFreq = Figure(figsize=(6,6),dpi=100)
         self.graphs['Mid Frequency'] = midFreq
         midFreq.suptitle('High Frequency Figure')
-        midFreq.text(0.95, 0.95, f'rt60: {rt60Mid}', horizontalalignment='right', verticalalignment='top', transform=lowFreq.transFigure)
+        midFreq.text(0.95, 0.95, f'rt60: {rt60Mid} seconds', horizontalalignment='right', verticalalignment='top', transform=lowFreq.transFigure)
         plot3 = midFreq.add_subplot(111)
         plot3.plot(self.t,self.frequency_check(1000), linewidth=0.5)
         plot3.set_xlabel('Time(s)')
@@ -225,7 +227,7 @@ class Model:
         highFreq = Figure(figsize=(6,6),dpi=100)
         self.graphs['High Frequency'] = highFreq
         highFreq.suptitle('High Frequency Figure')
-        highFreq.text(0.95, 0.95, f'rt60: {rt60High}', horizontalalignment='right', verticalalignment='top', transform=lowFreq.transFigure)
+        highFreq.text(0.95, 0.95, f'rt60: {rt60High}seconds', horizontalalignment='right', verticalalignment='top', transform=lowFreq.transFigure)
         plot4 = highFreq.add_subplot(111)
         plot4.plot(self.t,self.frequency_check(4000), linewidth=0.5)
         plot4.set_xlabel('Time(s)')
