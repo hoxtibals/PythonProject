@@ -13,6 +13,7 @@ class View(tk.Frame):
         TAKEN FROM CLASS 11-29 PARTTICIPATION
         we can use the this class to call the methods in the final module
         '''
+        
         self.figures = {}
         # create widgets
         self.message_label = tk.Label(self, text='', foreground='black')
@@ -26,6 +27,11 @@ class View(tk.Frame):
         self.stats_label = tk.Label(self, text='Summary Stats: ', foreground='black')
         self.stats_button = tk.Button(self, text='Show Stats', command=self.showStatsButton)
         self.stats_label.pack()
+
+        self.graphDefault = tk.StringVar()
+        self.graphDefault.set('select graph')
+        self.optionDropdown = tk.OptionMenu(parent, self.graphDefault, 'No figures')
+        self.optionDropdown.pack()
         
         self.loadGraphButton = tk.Button(self, text='Show Graph', command=self.showGraphButton)
         
@@ -97,9 +103,10 @@ class View(tk.Frame):
         self.graphDefault.set('Spectogram')
         self.controller.graphButtonClicked(graphFrame)
         menuOptions = self.figures.keys() if self.figures else ["No figures"]
-        self.optionDropdown = tk.OptionMenu(graphFrame, self.graphDefault,*menuOptions, 
-            command = lambda selected: self.displayGraph(self.figures[selected], graphFrame) if self.figures else None)
-        self.optionDropdown.pack()
+        self.optionDropdown['menu'].delete(0, 'end')
+        for option in menuOptions:
+            self.optionDropdown['menu'].add_command(label=option, command=tk._setit(self.graphDefault, option, lambda selected=option: self.displayGraph(self.figures[selected], graphFrame) if self.figures else None))
+            self.optionDropdown.pack()
 
         
         

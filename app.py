@@ -6,6 +6,8 @@ from view import View
 from controller import Controller
 # test code
 
+
+
 # testing model openwavfile method
     # model = Model()
     # model.openWAVfile("test.wav")
@@ -14,6 +16,7 @@ from controller import Controller
 def start_program():
     mainW = tk.Tk()
     mainW.title("WAV File Analyzer")
+    #mainW.geometry("800x600+0+100")
     
     WAVframe = tk.Frame(mainW)
     WAVframe.pack()

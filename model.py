@@ -102,7 +102,7 @@ class Model:
         try:
             new_path = self.convert_to_wav(filepath)
             audio = AudioSegment.from_wav(new_path)
-            self.length = audio.duration_seconds
+            self.length = round(audio.duration_seconds,2)
             self.num_channels = audio.channels
             mono_audio = audio.set_channels(1)
             # Convert mono_audio to numpy array
@@ -190,16 +190,49 @@ class Model:
         plot1.set_ylabel('Frequency')
 
         #Create Low freq figure
+        rt60Low = round(abs(self.calculate_reverb(250)),2)
         lowFreq = Figure(figsize=(6,6),dpi=100)
         self.graphs['Low Frequency'] = lowFreq
+        lowFreq.suptitle('Low Frequency Figure')
+        lowFreq.text(0.95, 0.95, f'rt60: {rt60Low}', horizontalalignment='right', verticalalignment='top', transform=lowFreq.transFigure)
         plot2 = lowFreq.add_subplot(111)
-        plot2.plot(self.t,self.frequency_check(1000))
+        plot2.plot(self.t,self.frequency_check(250), linewidth=0.5)
         plot2.set_xlabel('Time')
         plot2.set_ylabel('Decibels')
 
         #create Mid freq figure
+        rt60Mid = round(abs(self.calculate_reverb(1000)),2)
+        midFreq = Figure(figsize=(6,6),dpi=100)
+        self.graphs['Mid Frequency'] = midFreq
+        midFreq.suptitle('High Frequency Figure')
+        midFreq.text(0.95, 0.95, f'rt60: {rt60Mid}', horizontalalignment='right', verticalalignment='top', transform=lowFreq.transFigure)
+        plot3 = midFreq.add_subplot(111)
+        plot3.plot(self.t,self.frequency_check(1000), linewidth=0.5)
+        plot3.set_xlabel('Time')
+        plot3.set_ylabel('Decibels')
 
         # create High freq figure
+        rt60High = round(abs(self.calculate_reverb(4000)),2)
+        highFreq = Figure(figsize=(6,6),dpi=100)
+        self.graphs['High Frequency'] = highFreq
+        highFreq.suptitle('High Frequency Figure')
+        highFreq.text(0.95, 0.95, f'rt60: {rt60High}', horizontalalignment='right', verticalalignment='top', transform=lowFreq.transFigure)
+        plot4 = highFreq.add_subplot(111)
+        plot4.plot(self.t,self.frequency_check(4000), linewidth=0.5)
+        plot4.set_xlabel('Time')
+        plot4.set_ylabel('Decibels')
+
+        #new plot check
+        amplitude = Figure(figsize=(6,6),dpi=100)
+        self.graphs['Amplitude'] = amplitude
+        amplitude.suptitle('Amplitude Figure')
+        plot5 = amplitude.add_subplot(111)
+        time = np.arange(len(self.data))/self.sample_rate
+        plot5.plot(time,abs(self.data), linewidth=0.5)
+        plot5.set_xlabel('Time')
+        plot5.set_ylabel('Amplitude')
+        
+
         
     
     '''
