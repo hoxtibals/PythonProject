@@ -29,7 +29,11 @@ class Model:
         self._spectrum = np.empty((0,0))
         self._freqs = np.array([])
         self._t = np.array([])
+        self._graphs = {}
 
+    @property
+    def graphs(self):
+        return self._graphs
     @property
     def length(self):
         return self._length
@@ -76,7 +80,10 @@ class Model:
         self._num_channels = value
     @length.setter
     def length(self,value):
-        self._length = value    
+        self._length = value   
+    @graphs.setter
+    def graphs(self,name,graph):
+        self._graphs[name] = graph 
     
 
     def openWAVfile(self,filepath):
@@ -169,16 +176,31 @@ class Model:
 
 
 
-    def graph_figure(self):
-        #create the figure
-        fig = Figure(figsize=(6,6),dpi=100)
+    def graph_figures(self):
+        #create all figures we will need and assign to dictionary and return
+
+        #create the figure for the spectogram
+        Spectogram = Figure(figsize=(6,6),dpi=100)
+        self.graphs['Spectogram'] = Spectogram
         #add the plot to the figure
-        plot1 = fig.add_subplot(111)
+        plot1 = Spectogram.add_subplot(111)
         #add the data to the plot
         plot1.specgram(self._data, Fs=self._sample_rate, NFFT=1024, cmap='jet')
         plot1.set_xlabel('Time')
         plot1.set_ylabel('Frequency')
-        return fig
+
+        #Create Low freq figure
+        lowFreq = Figure(figsize=(6,6),dpi=100)
+        self.graphs['Low Frequency'] = lowFreq
+        plot2 = lowFreq.add_subplot(111)
+        plot2.plot(self.t,self.frequency_check(1000))
+        plot2.set_xlabel('Time')
+        plot2.set_ylabel('Decibels')
+
+        #create Mid freq figure
+
+        # create High freq figure
+        
     
     '''
     return the data of the frequency in decible which we 

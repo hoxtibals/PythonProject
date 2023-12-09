@@ -13,6 +13,7 @@ class View(tk.Frame):
         TAKEN FROM CLASS 11-29 PARTTICIPATION
         we can use the this class to call the methods in the final module
         '''
+        self.figures = {}
         # create widgets
         self.message_label = tk.Label(self, text='', foreground='black')
         self.message_label.pack()
@@ -33,10 +34,19 @@ class View(tk.Frame):
         # set the controller
         self.controller = None
 
+    def add_figure(self, name, figure):
+        """
+        Add a figure to the dictionary of figures
+        :param name: name of the figure
+        :param figure: the figure
+        :return:
+        """
+        self.figures[name] = figure
+
     def set_controller(self, controller):
         """
         Set the controller
-        :param controller:
+        :param controller: the controller for the view to reference
         :return:
         """
         self.controller = controller
@@ -82,25 +92,34 @@ class View(tk.Frame):
     def showGraphButton(self):
         graphFrame = tk.Frame(self)
         graphFrame.pack()
+        
+        self.graphDefault = tk.StringVar()
+        self.graphDefault.set('Spectogram')
         self.controller.graphButtonClicked(graphFrame)
+        menuOptions = self.figures.keys() if self.figures else ["No figures"]
+        self.optionDropdown = tk.OptionMenu(graphFrame, self.graphDefault,*menuOptions, 
+            command = lambda selected: self.displayGraph(self.figures[selected], graphFrame) if self.figures else None)
+        self.optionDropdown.pack()
+
+        
         
         
     def showStatsButton(self):
         self.controller.StatsButtonClicked()
-    def loadGraph(self):
-        #loads the graph into the frame 
-        pass
     
     def hide_message(self):
         self.message_label['text'] = ''
         
-    def display_graph(self, figure,frame):
+    def displayGraph(self, figure,frame):
         """
         Display the graph
         :param figure: the figure that will be displayed (this will be called in the controller)
         :param frame: the frame we wish to assign the graph to
         :return:
         """
+        # how we get rid of the old graph when a new one is selected
+        if hasattr(self, 'graph'):
+            self.graph.get_tk_widget().pack_forget()
         self.graph = FigureCanvasTkAgg(figure, master=frame)
         self.graph.get_tk_widget().pack()
         self.graph.draw()

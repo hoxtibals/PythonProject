@@ -34,11 +34,17 @@ class Controller:
         except ValueError as error:
             self.view.show_error(error)   
 
+
     def graphButtonClicked(self,frame):
+        self.model.graph_figures()
         try:
             if not self.model.data.any():
                 raise ValueError("No WAV file loaded")
-            self.view.display_graph(self.model.graph_figure(),frame)
+            # we need to add all three graphs to the view figures attribute
+            #toAdd = self.model.all_graphs()
+            for figure in self.model.graphs:
+                self.view.add_figure(figure,self.model.graphs[figure])
+            self.view.displayGraph(self.model.graphs[self.view.graphDefault.get()],frame)
         except ValueError as error:
             self.view.show_error(error)
     def setFrequency(self,freq):
