@@ -67,12 +67,6 @@ class Model:
     @sample_rate.setter
     def sample_rate(self,value):
         self._sample_rate = value
-    @data.setter    
-    def data(self,value):
-        # we can get number of channels by looking at the data
-        self._data = value
-        self._num_channels = self.data.shape[len(self.data.shape)-1]
-        self._length = self.data.shape[0]/self.sample_rate
     @spectrum.setter
     def spectrum(self, value):
         self._spectrum = value
@@ -97,6 +91,12 @@ class Model:
     @resFreq.setter
     def resFreq(self,value):
         self._resFreq = value
+    @data.setter    
+    def data(self,value):
+        # we can get number of channels by looking at the data
+        self._data = value
+        self._num_channels = self.data.shape[len(self.data.shape)-1]
+        self._length = self.data.shape[0]/self.sample_rate
     
     '''
     input: a filepath to a file
