@@ -86,17 +86,17 @@ class View(tk.Frame):
         self.statisticsFrame.pack()
 
         stats = self.controller.passStats()
-        self.sampleRateLabel = tk.Label(self.statisticsFrame, text=f'Sample Rate: {stats["sample_rate"]}')
+        self.sampleRateLabel = tk.Label(self.statisticsFrame, text=f'Sample Rate: {stats["sample_rate"]}Hz')
         self.sampleRateLabel.pack()
         self.numChannelsLabel = tk.Label(self.statisticsFrame, text=f'Number of Channels (before change): {stats["num_channels"]}')
         self.numChannelsLabel.pack()
-        self.lengthLabel = tk.Label(self.statisticsFrame, text=f'Length: {stats["length"]}')
+        self.lengthLabel = tk.Label(self.statisticsFrame, text=f'Length: {stats["length"]} seconds')
         self.lengthLabel.pack()
-        self.average_rt60Label = tk.Label(self.statisticsFrame, text=f'Average RT60: {stats["average_rt60"]}')
+        self.average_rt60Label = tk.Label(self.statisticsFrame, text=f'Average RT60: {stats["average_rt60"]} seconds')
         self.average_rt60Label.pack()
-        self.averageDifferentceLabel = tk.Label(self.statisticsFrame, text=f'Difference rt60 from 0.5: {stats["average_rt60"] - 0.5}')
+        self.averageDifferentceLabel = tk.Label(self.statisticsFrame, text=f'Difference rt60 from 0.5: {stats["average_rt60"] - 0.5}seconds')
         self.averageDifferentceLabel.pack()
-        self.resFreqLabel = tk.Label(self.statisticsFrame, text=f'Resonant Frequency: {stats["resFreq"]}')
+        self.resFreqLabel = tk.Label(self.statisticsFrame, text=f'Resonant Frequency: {stats["resFreq"]}Hz')
         self.resFreqLabel.pack()
         
         '''

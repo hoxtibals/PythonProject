@@ -5,7 +5,7 @@
 #Create a WAV file class that can be used to manipulate the WAV file and read metadata  
 # the controller module will be used to call these methods in model module 
 
-import scipy
+from scipy.signal import welch
 import numpy as np
 import matplotlib.pyplot as matplt
 from matplotlib.figure import Figure
@@ -14,8 +14,7 @@ import os
 import subprocess
 import io
 from scipy.fft import fft
-import wave
-import contextlib
+
 
 
 class Model:
@@ -90,7 +89,7 @@ class Model:
         self._avgRT = round(abs(value),2)
     @resFreq.setter
     def resFreq(self,value):
-        self._resFreq = value
+        self._resFreq = round(value,2)
     @data.setter    
     def data(self,value):
         # we can get number of channels by looking at the data
@@ -189,9 +188,9 @@ class Model:
     resonant frequency finder which does FFT to calculate the resonant frequency 
     '''
     def findRes(self):
-        freqs = fft(self.data)
-        maxIndex = np.argmax(abs(freqs))
-        self.resFreq = round(self.freqs[maxIndex],2)
+        freq,power = welch(self.data,self.sample_rate,nperseg=4096)
+        topFreq = freq[np.argmax(power)]
+        self.resFreq = topFreq
 
     '''
     input:
@@ -290,6 +289,26 @@ class Model:
         plot8.plot(newData)
         plot8.set_xlabel('Frequency (Hz)')
         plot8.set_ylabel('Magnitude (dB)')
+
+        #Freq vs Power
+        freqPower = Figure(figsize=(6,6),dpi=100)
+        self.graphs['Freq vs Power'] = freqPower
+        freqPower.suptitle('Freq vs Power Figure')
+        #here we will be using code given from the annoucement to add an extra graph
+        freq,power = welch(self.data,self.sample_rate,nperseg=4096)
+        n = len(self.data)
+        k = np.arange(n)
+        T = n/self.sample_rate
+        freq = k/T
+        freq = freq[:len(freq)//2]
+        Y = np.fft.fft(self.data)/n
+        Y = Y[:n//2]
+        plot9 = freqPower.add_subplot(111)
+        plot9.plot(freq,abs(Y))
+        plot9.set_xscale('symlog')
+        plot9.set_ylabel('Frequency (Hz)')
+        plot9.set_xlabel('Power')
+
 
         
     
