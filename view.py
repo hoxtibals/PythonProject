@@ -57,9 +57,6 @@ class View(tk.Frame):
         """
         self.controller = controller
     
-    '''
-    handles the button clicked event for the loadWav file
-    '''
     def loadWAVfileButton(self):
         '''
         handle button click
@@ -71,9 +68,6 @@ class View(tk.Frame):
             self.WAVbutton = tk.Button(self, text='Load Spectogram', command= self.showGraphButton)
             self.WAVbutton.pack()
         
-        
-            
-        
     def set_freq_button(self, freq):
         '''
         Set the frequency
@@ -82,6 +76,10 @@ class View(tk.Frame):
         '''
         #This will be called when button is pushed, will call controller to use command
         self.controller.setFrequency(freq)
+        '''
+        create the labels to show the statistics
+        and get the statistics from the controller as a dictionary
+        '''
     def create_stats(self):
         #we use controller methods to get the statistics from the model
         self.statisticsFrame = tk.Frame(self)
@@ -98,7 +96,13 @@ class View(tk.Frame):
         self.average_rt60Label.pack()
         self.averageDifferentceLabel = tk.Label(self.statisticsFrame, text=f'Difference rt60 from 0.5: {stats["average_rt60"] - 0.5}')
         self.averageDifferentceLabel.pack()
-            
+        self.resFreqLabel = tk.Label(self.statisticsFrame, text=f'Resonant Frequency: {stats["resFreq"]}')
+        self.resFreqLabel.pack()
+        
+        '''
+        create the graph button and create the window whwere the graph will be displayed
+        we will also create the dropdown menu for the graph's 
+        '''
     def showGraphButton(self):
         graphFrame = tk.Frame(self)
         graphFrame.pack()

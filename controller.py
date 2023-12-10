@@ -13,8 +13,10 @@ class Controller:
         self.view = view
         self.model = model
 
-        # use methods as different calls to the model and view
-# may need to include more stats or calculate them on the fly 
+       
+    '''
+    get the statistics from the model and pass them as a dictionary to the view
+    '''
     def passStats(self):
         return {
             'sample_rate': self.model.sample_rate,
@@ -24,9 +26,12 @@ class Controller:
             'spectrum': self.model.spectrum,
             'freqs': self.model.freqs,
             't': self.model.t,
-            'average_rt60': self.model.avgRT
+            'average_rt60': self.model.avgRT,
+            'resFreq': self.model.resFreq
         }
-    
+    '''
+    handle the stats button click which will create the statistics
+    '''
     def StatsButtonClicked(self):
         try:
             if not self.model.data:
@@ -35,7 +40,9 @@ class Controller:
         except ValueError as error:
             self.view.show_error(error)   
 
-
+    '''
+    we add all possible graphs to the view and call them as needed from there
+    '''
     def graphButtonClicked(self,frame):
         self.model.graph_figures()
         try:
@@ -48,10 +55,18 @@ class Controller:
             self.view.displayGraph(self.model.graphs[self.view.graphDefault.get()],frame)
         except ValueError as error:
             self.view.show_error(error)
+
+    '''
+    can be used to set frequency from view (possible future feature)
+    '''
     def setFrequency(self,freq):
         # call the method in the model to get the frequency 
         # call the method in the view to display the frequency
         self.model.target_freq(freq)
+
+    '''
+    The load wav file function which shows if we successfully load the file or not
+    '''
     def loadWAVfile(self,filepath):
         # call the method in the model to load the WAV file
         # call the method in the view to display the WAV file
@@ -66,6 +81,7 @@ class Controller:
             self.view.show_error(error)
         except FileNotFoundError as error:
             self.view.show_error(error)
-        #after this function the basic summar statistics are created, now we just hand them off to the view
+        except Exception as error:  # Catch all other exceptions
+            self.view.show_error("An unexpected error occurred: " + str(error))
 
 

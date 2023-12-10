@@ -13,6 +13,7 @@ from pydub import AudioSegment
 import os
 import subprocess
 import io
+from scipy.fft import fft
 import wave
 import contextlib
 
@@ -31,6 +32,7 @@ class Model:
         self._freqs = np.array([])
         self._t = np.array([])
         self._graphs = {}
+        self._resFreq = 0
 
     @property
     def graphs(self):
@@ -59,7 +61,9 @@ class Model:
     @property
     def avgRT(self):
         return self._avgRT
-    
+    @property
+    def resFreq(self):
+        return self._resFreq
     @sample_rate.setter
     def sample_rate(self,value):
         self._sample_rate = value
@@ -90,6 +94,9 @@ class Model:
     @avgRT.setter
     def avgRT(self,value):
         self._avgRT = round(abs(value),2)
+    @resFreq.setter
+    def resFreq(self,value):
+        self._resFreq = value
     
     '''
     input: a filepath to a file
@@ -109,6 +116,7 @@ class Model:
             self._sample_rate = mono_audio.frame_rate
             self.spectrum, self.freqs, self.t, im = matplt.specgram(self.data, Fs=self.sample_rate, NFFT=1024, cmap=matplt.get_cmap("jet"))
             self.avgRT = (self.calculate_reverb(1000) + self.calculate_reverb(250) + self.calculate_reverb(6000))/3
+            self.findRes()
         except FileNotFoundError:
             raise FileNotFoundError("File is not a WAV file")
         except ValueError:
@@ -168,7 +176,6 @@ class Model:
             stripped_wav_filepath = os.path.splitext(filepath)[0] + '_stripped.wav'
             self.strip_metadata(filepath, stripped_wav_filepath)
             return stripped_wav_filepath
-
     '''
     input: a frequency in hz to be selected
     output: a target frequency around the 1000 hz range
@@ -178,7 +185,13 @@ class Model:
             if (x > target).any():
                 break
         return x
-
+    '''
+    resonant frequency finder which does FFT to calculate the resonant frequency 
+    '''
+    def findRes(self):
+        freqs = fft(self.data)
+        maxIndex = np.argmax(abs(freqs))
+        self.resFreq = round(self.freqs[maxIndex],2)
 
     '''
     input:
@@ -267,7 +280,16 @@ class Model:
         plot7.plot(freqs, Pxx)
         plot7.set_xlabel('Frequency (Hz)')
         plot7.set_ylabel('Magnitude (dB)')
-        
+
+        #FFT graph
+        fftGraph = Figure(figsize=(6,6),dpi=100)
+        self.graphs['FFT'] = fftGraph
+        fftGraph.suptitle('FFT Figure')
+        plot8 = fftGraph.add_subplot(111)
+        newData = np.abs(fft(self.data))
+        plot8.plot(newData)
+        plot8.set_xlabel('Frequency (Hz)')
+        plot8.set_ylabel('Magnitude (dB)')
 
         
     
@@ -317,7 +339,10 @@ class Model:
         finally:
             return rt60
     
-        
+    '''
+    input: an array and a value
+    output: the nearest value in the array to the passed value
+    '''    
     def nearestValue(self,array,value):
         nparray = np.asarray(array)
         idx = (np.abs(nparray-value)).argmin()
