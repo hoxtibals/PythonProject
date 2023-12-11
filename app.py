@@ -7,7 +7,6 @@ from controller import Controller
 # test code
 
 
-
 # testing model openwavfile method
     # model = Model()
     # model.openWAVfile("test.wav")

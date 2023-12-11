@@ -13,7 +13,6 @@ class Controller:
         self.view = view
         self.model = model
 
-       
     '''
     get the statistics from the model and pass them as a dictionary to the view
     '''

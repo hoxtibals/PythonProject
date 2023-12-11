@@ -5,7 +5,6 @@ from tkinter import filedialog
 import matplotlib.pyplot as matplt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-
 class View(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
@@ -158,4 +157,3 @@ class View(tk.Frame):
         self.message_label['text'] = message
         self.message_label['foreground'] = 'green'
         #self.message_label.after(3000, self.hide_message)
-    
