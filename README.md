@@ -15,4 +15,3 @@ Open the dropdown menu and select the graph you want.
 This is a group project for school.
 It allows us to gain a better understanding with Python and its libraries. 
 It teaches us on how to work with a team.
-=======
